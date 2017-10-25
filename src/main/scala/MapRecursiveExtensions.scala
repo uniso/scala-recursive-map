@@ -8,7 +8,7 @@ object MapRecursiveExtensions {
     def /(i2: Any) = new /(this, i2)
     override def toString = node + "/" + item
   }
-  implicit def atRoot(s: String) =  new{
+  implicit class atRoot(s: String){
     def /(s2: Any) = new /(s, s2)
   }
 
@@ -16,7 +16,7 @@ object MapRecursiveExtensions {
   type RecursiveMap = Map[String, Any]
   type TransformationFunction = PartialFunction[(Any, Any), Any]
 
-  implicit def MapToRecursiveExtension(map: RecursiveMap) = new{
+  implicit class MapToRecursiveExtension(map: RecursiveMap){
     def recursiveMap(f: TransformationFunction): RecursiveMap = {
       val fullTransform = f.orElse[(Any, Any), Any]{case (k, a) => a}
 
@@ -32,7 +32,7 @@ object MapRecursiveExtensions {
         }
       }
 
-      def notNullPath(path: Any, item: Any) = if (path == null) item else new /(path, item)
+      def notNullPath(path: Any, item: Any) = if (path == null) item else /(path, item)
 
       def iterateMap(m: RecursiveMap, path: Any): RecursiveMap =
         m.map{case (k, v) => transformValue(v, notNullPath(path, k)) match {
@@ -42,7 +42,7 @@ object MapRecursiveExtensions {
 
       def iterateList(list: List[Any], path: Any):  List[Any] =
         list.zipWithIndex.map{case (v, i) => transformValue(v,notNullPath(path, i))match {
-          case _ / _ => sys.error("Position change in list is not supported. TransformationFunction should not return \"key\" / \"value\" on list items")
+          case _ / _ => sys.error("""Position change in list is not supported. TransformationFunction should not return "key" / "value" on list items""")
           case newValue => newValue
         }}
 
