@@ -11,4 +11,4 @@ crossScalaVersions := Seq(
   "2.10.6"
 )
 
-libraryDependencies  ++= Seq( "org.scalatest" %% "scalatest" % "3.0.1" % "test")
+libraryDependencies  ++= Seq( "org.scalatest" %% "scalatest" % "3.1.1" % "test")
